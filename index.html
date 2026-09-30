@@ -66,8 +66,8 @@ svg{display:block}
 #guide line{stroke:var(--glint);stroke-width:3;stroke-dasharray:2 9;stroke-linecap:round}
 #box{position:absolute;left:0;top:0;border:3px solid var(--glint);border-radius:16px;pointer-events:none;opacity:0;transition:opacity .25s}
 #box.show{opacity:1}
-#box.ok{border-color:var(--go)}#box.ok .tag{color:var(--go);background:rgba(20,40,28,.72)}
-#target{position:absolute;left:0;top:0;width:36px;height:36px;margin:-18px 0 0 -18px;border-radius:50%;border:2px solid var(--glint);pointer-events:none;opacity:0;transition:opacity .25s,transform .35s ease}
+#box.ok{border-color:var(--go)}
+#target{position:absolute;left:0;top:0;width:36px;height:36px;margin:-18px 0 0 -18px;border-radius:50%;border:2px solid var(--glint);pointer-events:none;opacity:0;transition:opacity .25s}
 #target::after{content:"";position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:var(--glint)}
 #target.show{opacity:.9}
 #box .tag{position:absolute;left:50%;top:calc(100% + 10px);transform:translateX(-50%);white-space:nowrap;padding:6px 13px;border-radius:15px;background:rgba(38,34,24,.72);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:var(--glint);font-weight:600;font-size:15px}
@@ -101,8 +101,21 @@ svg{display:block}
 #blink{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
 #blink.on{animation:blink .22s ease-out}
 @keyframes blink{0%{opacity:.95}100%{opacity:0}}
-#expPop{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);width:min(84%,330px);padding:8px 14px;border-radius:20px;background:rgba(0,0,0,.62);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);display:flex;align-items:center;gap:10px}
-#expPop output{min-width:44px;text-align:right;font-variant-numeric:tabular-nums;font-size:14px;color:var(--glint);font-weight:600}
+#pro{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);width:min(92%,380px);padding:8px 14px 8px;border-radius:20px;background:rgba(0,0,0,.66);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
+.prow{display:flex;align-items:center;gap:10px;height:42px}
+.prow span{width:64px;font-size:13px;font-weight:600;color:var(--mute)}
+.prow output{min-width:70px;text-align:right;font-variant-numeric:tabular-nums;font-size:14px;color:var(--glint);font-weight:600;white-space:nowrap}
+.pfoot{display:flex;align-items:center;justify-content:space-between;padding-top:4px}
+.pfoot small{font-size:12px;color:var(--dim)}
+.pfoot button{height:30px;padding:0 13px;border-radius:15px;background:rgba(255,255,255,.12);font-size:13px;font-weight:600}
+#readout{position:absolute;right:10px;bottom:10px;padding:5px 10px;border-radius:12px;background:rgba(0,0,0,.55);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:var(--glint);font-size:12px;font-weight:600;font-variant-numeric:tabular-nums;white-space:pre;pointer-events:none}
+#noise{position:absolute;inset:0;pointer-events:none;opacity:0;mix-blend-mode:overlay;background-size:128px 128px}
+#aim{position:absolute;left:50%;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;border:2px solid rgba(255,255,255,.92);box-shadow:0 0 3px rgba(0,0,0,.4);pointer-events:none;opacity:0;transition:opacity .25s}
+#aim.show{opacity:1}
+#target .tl{position:absolute;left:50%;top:calc(100% + 8px);transform:translateX(-50%);white-space:nowrap;padding:5px 11px;border-radius:13px;background:rgba(38,34,24,.72);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:var(--glint);font-weight:600;font-size:14px}
+#target.up .tl{top:auto;bottom:calc(100% + 8px)}
+#target.ok{border-color:var(--go)}#target.ok::after{background:var(--go)}#target.ok .tl{color:var(--go);background:rgba(20,40,28,.72)}
+#shutter .arc.prog{stroke:var(--glint)}
 .dock{flex:none;display:flex;flex-direction:column;align-items:center;padding:6px 0 8px}
 #msg{height:24px;line-height:24px;font-size:16px;font-weight:600;color:var(--mute);text-align:center;white-space:nowrap;padding:0 14px;max-width:100%;overflow:hidden;text-overflow:ellipsis;transition:color .25s}
 #msg.go{color:var(--go)}#msg.glint{color:var(--glint)}
@@ -238,17 +251,22 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <video id="video" playsinline muted autoplay></video>
       <div id="grid"></div>
       <svg id="guide"><line id="gline" x1="0" y1="0" x2="0" y2="0"/></svg>
-      <div id="target"></div>
-      <div id="box"><span class="tag" id="tag"></span></div>
+      <div id="noise"></div>
+      <div id="aim"></div>
+      <div id="target"><span class="tl" id="tl"></span></div>
+      <div id="box"></div>
       <div id="edge"></div>
       <div id="level"><div class="lv" id="lv"><i class="lt"></i><i class="lm" id="lm"></i><i class="rt"></i><b></b></div></div>
       <div id="lock"><i></i><i></i><i></i><i></i></div>
       <div id="chips"></div>
       <div id="ring"></div>
       <div id="blink"></div>
-      <div id="expPop" hidden>
-        <input id="expR" type="range" min="-2" max="2" step="0.1" value="0" aria-label="Exposure">
-        <output id="expV">0.0</output>
+      <div id="readout" hidden></div>
+      <div id="pro" hidden>
+        <div class="prow"><span>Exposure</span><input id="evR" type="range" min="-3" max="3" step="0.1" value="0" aria-label="Exposure compensation"><output id="evV">0.0</output></div>
+        <div class="prow"><span>ISO</span><input id="isoR" type="range" min="0" max="9" step="1" value="0" aria-label="ISO"><output id="isoV">Auto</output></div>
+        <div class="prow"><span>Shutter</span><input id="shR" type="range" min="0" max="15" step="1" value="0" aria-label="Shutter speed"><output id="shV">Auto</output></div>
+        <div class="pfoot"><small id="proMode">Emulated on this device</small><button id="proReset">Reset</button></div>
       </div>
     </div>
   </main>
@@ -266,9 +284,10 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 <div class="sheet" id="sheet" hidden>
   <div class="card">
     <h2>Camera settings</h2>
-    <div class="row"><div>Guide me to the shot<small>Shows where to point your phone, never zooms for you</small></div><input class="sw" type="checkbox" id="cAuto"></div>
+    <div class="row"><div>Guide me to the best spot<small>Searches the wide lens and steers you there, never zooms for you</small></div><input class="sw" type="checkbox" id="cAuto"></div>
     <div class="row"><div>Light and flare warnings<small>Sun, flare, glare, clipping</small></div><input class="sw" type="checkbox" id="cWarn"></div>
     <div class="row"><div>Edit right after each shot</div><input class="sw" type="checkbox" id="cReview"></div>
+    <div class="row"><div>Auto-edit every shot<small>You can still tap Auto to undo it</small></div><input class="sw" type="checkbox" id="cAutoEdit"></div>
     <div class="lens" id="lensInfo"></div>
     <button class="done" id="sheetDone">Done</button>
   </div>
@@ -330,15 +349,15 @@ function guessModel() {
 const CFG = {
   guide: store.get('guide', true), warnings: store.get('warnings', true), review: store.get('review', false),
   grid: store.get('grid', true), level: store.get('level', true), assist: store.get('assist', true),
-  model: store.get('model', guessModel())
+  model: store.get('model', guessModel()), autoEdit: store.get('autoEdit', false)
 };
 
 const video = el('video'), vf = el('vf'), stage = el('stage');
-const CAM = { stream: null, ultra: false, base: 1, ready: false };
+const CAM = { stream: null, ultra: false, base: 1, ready: false, caps: {}, real: false };
 const V = { vw: 0, vh: 0, z: 1, tz: 1, cx: 0, cy: 0, tcx: 0, tcy: 0, ev: 0 };
 const UI = { A: 3 / 4, vfW: 1, vfH: 1, userZoom: 1, lastUserZoom: 0 };
-const S = { hasOri: false, hasRate: false, ux: 0, uy: 1, uz: 0, rate: 0, a: 0, ref: 0, dev: 0, usable: false, steady: false, since: 0, steadyFor: 0, lastRef: 0 };
-const SG = { subj: null, disp: null, label: '', kind: '', manual: false, shownAt: 0, cand: null, candSince: 0, miss: 0, lastCheck: 0, snooze: 0, anchor: null, lastAnchor: 0, aligned: false, alignedAt: 0, dx: 0, dy: 0, zoomHint: null };
+const S = { hasOri: false, hasRate: false, hasAlpha: false, hasAcc: false, al: 0, be: 90, ga: 0, ux: 0, uy: 1, uz: 0, rate: 0, acc: 0, shake: 0, calmSince: 0, a: 0, ref: 0, dev: 0, usable: false, steady: false, since: 0, steadyFor: 0, lastRef: 0 };
+const SG = { tgt: null, disp: null, ray: null, score: 0, inWide: false, cand: null, worse: 0, weak: 0, label: '', labelAt: 0, pick: null, manual: false, aligned: false, alignedAt: 0, dx: 0, dy: 0, zoomHint: null, lastZoom: 0, shownAt: 0, snooze: 0, subj: null, sdisp: null };
 const AN = { cv: mk(4, 4), ctx: null, w: 0, h: 0, s: 1, last: 0, motion: 0, score: 0, info: null, hasPrev: false, hist: new Uint32Array(256) };
 AN.ctx = AN.cv.getContext('2d', { willReadFrequently: true });
 const shots = [];
@@ -369,6 +388,12 @@ async function startCamera() {
     }
   } catch (e) { /* keep default camera */ }
   CAM.stream = stream;
+  try {
+    const tr = stream.getVideoTracks()[0];
+    CAM.caps = (tr.getCapabilities && tr.getCapabilities()) || {};
+    CAM.real = !!(CAM.caps.exposureTime && CAM.caps.iso && Array.isArray(CAM.caps.exposureMode) && CAM.caps.exposureMode.indexOf('manual') >= 0);
+  } catch (e) { CAM.caps = {}; CAM.real = false; }
+  el('proMode').textContent = CAM.real ? 'Using the camera’s real controls' : 'Emulated on this device';
   CAM.base = CAM.ultra ? 0.5 : 1;
   video.srcObject = stream;
   try { await video.play(); } catch (e) {}
@@ -399,7 +424,7 @@ el('go').addEventListener('click', async () => {
   window.addEventListener('devicemotion', onMot);
   Promise.all(perms).catch(() => {});
   el('start').hidden = true; el('app').hidden = false;
-  applyCfgUI(); buildZooms(); renderAssistBtn(); layout(); requestAnimationFrame(layout);
+  applyCfgUI(); buildZooms(); renderAssistBtn(); applyPro(); layout(); requestAnimationFrame(layout);
   requestAnimationFrame(loop);
 });
 
@@ -413,6 +438,7 @@ document.addEventListener('visibilitychange', async () => {
 /* ---------------- sensors ---------------- */
 function onOri(e) {
   if (e.beta == null || e.gamma == null) return;
+  S.al = e.alpha || 0; S.be = e.beta; S.ga = e.gamma; S.hasAlpha = e.alpha != null;
   const b = e.beta * D2R, g = e.gamma * D2R;
   const ux = -Math.sin(g) * Math.cos(b), uy = Math.sin(b), uz = Math.cos(g) * Math.cos(b);
   const k = S.hasOri ? 0.3 : 1;
@@ -421,9 +447,9 @@ function onOri(e) {
 }
 function onMot(e) {
   const r = e.rotationRate;
-  if (!r || r.alpha == null) return;
-  const m = Math.hypot(r.alpha || 0, r.beta || 0, r.gamma || 0);
-  S.rate += (m - S.rate) * 0.25; S.hasRate = true;
+  if (r && r.alpha != null) { const m = Math.hypot(r.alpha || 0, r.beta || 0, r.gamma || 0); S.rate += (m - S.rate) * 0.3; S.hasRate = true; }
+  const a = e.acceleration;
+  if (a && a.x != null) { const m = Math.hypot(a.x || 0, a.y || 0, a.z || 0); S.acc += (m - S.acc) * 0.2; S.hasAcc = true; }
 }
 function sensorsTick(now) {
   if (S.hasOri) {
@@ -436,12 +462,44 @@ function sensorsTick(now) {
     let dev = a - S.ref; dev = ((dev + 540) % 360) - 180;
     S.a = a; S.dev = dev; S.usable = tilt < 0.82;
   }
-  const steadyNow = S.hasRate ? S.rate < 9 : AN.motion < 0.6;
+  // Steadiness: gyro turn rate + hand jitter (accelerometer) + what the picture itself is doing.
+  // Separate on/off thresholds and a short settle time so it doesn't flicker.
+  let shake = S.hasRate ? Math.max(S.rate / 6, S.hasAcc ? S.acc / 0.35 : 0, AN.motion / 2.5) : AN.motion / 0.5;
+  S.shake = shake;
+  const calm = shake < (S.steady ? 1.8 : 1);
+  if (calm) { if (!S.calmSince) S.calmSince = now; } else S.calmSince = 0;
+  const steadyNow = calm && (S.steady || now - S.calmSince > 150);
   if (steadyNow && !S.steady) S.since = now;
   S.steady = steadyNow;
   S.steadyFor = steadyNow ? now - S.since : 0;
   const r = S.hasOri ? S.ref : 0;
   if (r !== S.lastRef) { S.lastRef = r; document.documentElement.style.setProperty('--rot', r + 'deg'); }
+}
+// Pixel <-> world direction, so a spot you've panned away from stays put in the world
+function rotM() {
+  const a = S.al * D2R, b = S.be * D2R, g = S.ga * D2R;
+  const ca = Math.cos(a), sa = Math.sin(a), cb = Math.cos(b), sb = Math.sin(b), cg = Math.cos(g), sg = Math.sin(g);
+  return [ca * cg - sa * sb * sg, -sa * cb, ca * sg + sa * sb * cg, sa * cg + ca * sb * sg, ca * cb, sa * sg - ca * sb * cg, -cb * sg, sb, cb * cg];
+}
+function camAxes() {
+  const o = (typeof window.orientation === 'number' ? window.orientation : ((screen.orientation && screen.orientation.angle) || 0)) * D2R;
+  return { rx: Math.cos(o), ry: -Math.sin(o), ux: Math.sin(o), uy: Math.cos(o) };
+}
+function fovTan() { const L = CAM.ultra ? 1.33 : 0.72, long = Math.max(V.vw, V.vh); return { h: L * V.vw / long, v: L * V.vh / long }; }
+function toWorld(px, py) {
+  if (!S.hasOri || !S.hasAlpha) return null;
+  const M = rotM(), A = camAxes(), T = fovTan();
+  const u = (px - V.vw / 2) / (V.vw / 2) * T.h, v = -(py - V.vh / 2) / (V.vh / 2) * T.v;
+  let x = u * A.rx + v * A.ux, y = u * A.ry + v * A.uy, z = -1; const n = Math.hypot(x, y, z); x /= n; y /= n; z /= n;
+  return [M[0] * x + M[1] * y + M[2] * z, M[3] * x + M[4] * y + M[5] * z, M[6] * x + M[7] * y + M[8] * z];
+}
+function fromWorld(w) {
+  if (!S.hasOri || !S.hasAlpha || !w) return null;
+  const M = rotM(), A = camAxes(), T = fovTan();
+  const x = M[0] * w[0] + M[3] * w[1] + M[6] * w[2], y = M[1] * w[0] + M[4] * w[1] + M[7] * w[2], z = M[2] * w[0] + M[5] * w[1] + M[8] * w[2];
+  const r = x * A.rx + y * A.ry, u = x * A.ux + y * A.uy, f = -z;
+  if (f < 0.15) { const hz = Math.abs(r) >= Math.abs(u); return { x: hz ? (r >= 0 ? V.vw * 3 : -V.vw * 2) : V.vw / 2, y: hz ? V.vh / 2 : (u >= 0 ? -V.vh * 2 : V.vh * 3) }; }
+  return { x: V.vw / 2 + (r / f) / T.h * V.vw / 2, y: V.vh / 2 - (u / f) / T.v * V.vh / 2 };
 }
 
 /* ---------------- layout + view math ---------------- */
@@ -527,45 +585,136 @@ function updateZoomUI() {
 }
 function setUserZoom(p) {
   UI.userZoom = p; UI.lastUserZoom = performance.now();
-  V.tz = p; SG.lastAnchor = 0; SG.zoomHint = null;
+  V.tz = p; onZoomChanged();
 }
 
-/* ---------------- suggestion state ---------------- */
+/* ---------------- best-position search ---------------- */
 function clearSugg() {
-  SG.subj = null; SG.disp = null; SG.cand = null; SG.manual = false; SG.anchor = null;
-  SG.aligned = false; SG.zoomHint = null; SG.miss = 0;
+  SG.tgt = null; SG.disp = null; SG.ray = null; SG.cand = null; SG.pick = null; SG.manual = false;
+  SG.aligned = false; SG.zoomHint = null; SG.worse = 0; SG.weak = 0; SG.label = '';
   renderAssistBtn();
 }
-function adopt(cd, now) {
-  SG.subj = Object.assign({}, cd.subj); SG.disp = Object.assign({}, cd.subj);
-  SG.label = cd.label; SG.kind = cd.kind; SG.miss = 0; SG.manual = false; SG.cand = null;
-  SG.anchor = null; SG.lastAnchor = 0; SG.aligned = false; SG.shownAt = now;
-}
-function shiftBoxes(dx, dy) {
-  for (const b of [SG.subj, SG.disp, SG.cand && SG.cand.subj]) if (b) { b.x += dx; b.y += dy; }
-}
-function iou(a, b) {
-  const x0 = Math.max(a.x, b.x), y0 = Math.max(a.y, b.y), x1 = Math.min(a.x + a.w, b.x + b.w), y1 = Math.min(a.y + a.h, b.y + b.h);
-  const i = Math.max(0, x1 - x0) * Math.max(0, y1 - y0);
-  return i / (a.w * a.h + b.w * b.h - i + 1e-6);
-}
-function grow(b) { const p = Math.max(b.w, b.h) * 0.5 + V.vw * 0.03; return { x: b.x - p, y: b.y - p, w: b.w + 2 * p, h: b.h + 2 * p }; }
-function visibleFrac(b) {
-  const x0 = Math.max(0, b.x), y0 = Math.max(0, b.y), x1 = Math.min(V.vw, b.x + b.w), y1 = Math.min(V.vh, b.y + b.h);
-  return Math.max(0, x1 - x0) * Math.max(0, y1 - y0) / (b.w * b.h + 1e-6);
-}
-// Screen-space offset -> words the person holding the phone understands (handles sideways grips)
+function shiftAll(dx, dy) { for (const p of [SG.tgt, SG.disp, SG.pick, SG.cand]) if (p) { p.x += dx; p.y += dy; } }
 function guideText(dx, dy) {
   const r = (S.hasOri ? -S.ref : 0) * D2R;
   const x = dx * Math.cos(r) - dy * Math.sin(r), y = dx * Math.sin(r) + dy * Math.cos(r);
-  const ax = Math.abs(x), ay = Math.abs(y), t = 0.04;
-  const hz = ax > t ? (x > 0 ? 'right' : 'left') : null;
-  const vt = ay > t ? (y > 0 ? 'down' : 'up') : null;
-  const small = Math.max(ax, ay) < 0.13;
+  const ax = Math.abs(x), ay = Math.abs(y), t = 0.035;
+  const hz = ax > t ? (x > 0 ? 'right' : 'left') : null, vt = ay > t ? (y > 0 ? 'down' : 'up') : null;
+  const m = Math.max(ax, ay);
+  if (m > 1.1) return ax >= ay ? 'Turn ' + hz + ' to the best spot' : 'Tilt ' + vt + ' to the best spot';
+  const small = m < 0.13;
   if (hz && vt) return (small ? 'Nudge ' : 'Move ') + hz + ' and tilt ' + vt;
   if (hz) return small ? 'Nudge your phone ' + hz : 'Move your phone ' + hz;
   if (vt) return small ? 'Tilt ' + vt + ' a touch' : 'Tilt your phone ' + vt;
   return 'Almost there';
+}
+function thirdsFit(px, py) {
+  let b = 0;
+  for (const tx of [1 / 3, 2 / 3]) for (const ty of [1 / 3, 2 / 3]) b = Math.max(b, Math.exp(-((px - tx) ** 2 + (py - ty) ** 2) / 0.0098));
+  return b;
+}
+// integral images so any frame's brightness / clipping / warmth / colour is O(1)
+function buildSAT() {
+  const w = AN.w, h = AN.h, W1 = w + 1, n = W1 * (h + 1), Y = AN.Y, R = AN.R, G = AN.G, B = AN.B;
+  if (!AN.SY || AN.SY.length !== n) { AN.SY = new Float64Array(n); AN.SY2 = new Float64Array(n); AN.SC = new Float32Array(n); AN.SD = new Float32Array(n); AN.SW = new Float32Array(n); AN.SS = new Float32Array(n); }
+  const SY = AN.SY, SY2 = AN.SY2, SC = AN.SC, SD = AN.SD, SW = AN.SW, SS = AN.SS;
+  for (let y = 0; y < h; y++) {
+    let a = 0, a2 = 0, c = 0, dk = 0, wm = 0, st = 0;
+    for (let x = 0; x < w; x++) {
+      const i = y * w + x, v = Y[i], r = R[i], g = G[i], b = B[i];
+      const mx = r > g ? (r > b ? r : b) : (g > b ? g : b), mn = r < g ? (r < b ? r : b) : (g < b ? g : b), sat = mx ? (mx - mn) / mx : 0;
+      a += v; a2 += v * v; if (v >= 250) c++; if (v < 20) dk++; if (r > b * 1.3 && r >= g && sat > 0.28 && v > 55) wm++; st += sat;
+      const k = (y + 1) * W1 + x + 1;
+      SY[k] = SY[k - W1] + a; SY2[k] = SY2[k - W1] + a2; SC[k] = SC[k - W1] + c; SD[k] = SD[k - W1] + dk; SW[k] = SW[k - W1] + wm; SS[k] = SS[k - W1] + st;
+    }
+  }
+}
+function peakIn(fr) {
+  const C = AN.cells; if (!C) return null;
+  const GW = C.GW, GH = C.GH, cw = V.vw / GW, ch = V.vh / GH;
+  const gx0 = Math.max(0, Math.ceil((fr.x + fr.w * 0.03) / cw - 0.5)), gx1 = Math.min(GW - 1, Math.floor((fr.x + fr.w * 0.97) / cw - 0.5));
+  const gy0 = Math.max(0, Math.ceil((fr.y + fr.h * 0.03) / ch - 0.5)), gy1 = Math.min(GH - 1, Math.floor((fr.y + fr.h * 0.97) / ch - 0.5));
+  if (gx1 < gx0 || gy1 < gy0) return null;
+  let mv = 0;
+  for (let gy = gy0; gy <= gy1; gy++) for (let gx = gx0; gx <= gx1; gx++) mv = Math.max(mv, C.sal[gy * GW + gx]);
+  if (mv <= 0) return null;
+  const th = mv * 0.7; let sx = 0, sy = 0, sw = 0;
+  for (let gy = gy0; gy <= gy1; gy++) for (let gx = gx0; gx <= gx1; gx++) {
+    const v = C.sal[gy * GW + gx]; if (v < th) continue;
+    const wt = v - th * 0.8; sx += (gx + 0.5) * cw * wt; sy += (gy + 0.5) * ch * wt; sw += wt;
+  }
+  return { v: mv / (C.peak + 1e-6), px: (sx / sw - fr.x) / fr.w, py: (sy / sw - fr.y) / fr.h };
+}
+// How good a photo would this exact frame make? Light, exposure, contrast, colour,
+// subject on a third, nothing sliced at the edges, horizon off-centre, sun placement.
+function scoreFrame(fx, fy, cw, ch, ctx) {
+  const s = AN.s, w = AN.w, h = AN.h, W1 = w + 1;
+  const x0 = clamp(Math.round(fx * s), 0, w - 1), y0 = clamp(Math.round(fy * s), 0, h - 1);
+  const x1 = clamp(Math.round((fx + cw) * s), x0 + 1, w), y1 = clamp(Math.round((fy + ch) * s), y0 + 1, h);
+  const rs = A => A[y1 * W1 + x1] - A[y0 * W1 + x1] - A[y1 * W1 + x0] + A[y0 * W1 + x0];
+  const n = (x1 - x0) * (y1 - y0);
+  const mY = rs(AN.SY) / n, sd = Math.sqrt(Math.max(0, rs(AN.SY2) / n - mY * mY));
+  const clipF = rs(AN.SC) / n, darkF = rs(AN.SD) / n, warmF = rs(AN.SW) / n, satM = rs(AN.SS) / n;
+  let sc = -Math.abs(mY - 118) / 260 - clipF * 2.2 - Math.max(0, darkF - 0.25) * 1.2 + Math.min(sd, 70) / 140 + Math.min(warmF, 0.4) * 0.9 + Math.min(satM, 0.45) * 0.4;
+  const fr = { x: fx, y: fy, w: cw, h: ch };
+  const P = peakIn(fr);
+  if (P) {
+    const wt = clamp((ctx.str - 1) / 1.5, 0.25, 1);
+    sc += wt * P.v * (0.25 + 0.45 * thirdsFit(P.px, P.py));
+    if (P.px < 0.08 || P.px > 0.92 || P.py < 0.08 || P.py > 0.92) sc -= 0.3 * P.v * wt;
+  }
+  sc -= 0.8 * borderSal(fr);
+  if (ctx.hy != null) {
+    const p = (ctx.hy - fy) / ch;
+    if (p > 0.06 && p < 0.94) { if (Math.abs(p - 0.5) < 0.1) sc -= 0.25; else if (Math.abs(p - 1 / 3) < 0.07 || Math.abs(p - 2 / 3) < 0.07) sc += 0.12; }
+  }
+  if (ctx.sun) {
+    const px = (ctx.sun.x - fx) / cw, py = (ctx.sun.y - fy) / ch;
+    if (px > 0 && px < 1 && py > 0 && py < 1) {
+      if (ctx.sun.sky) { sc += 0.12 + 0.12 * thirdsFit(px, py); if (px < 0.1 || px > 0.9 || py < 0.1 || py > 0.9) sc -= 0.2; }
+      else sc -= 0.1;
+    }
+  }
+  if (ctx.pick) {
+    const px = (ctx.pick.x - fx) / cw, py = (ctx.pick.y - fy) / ch;
+    if (px < 0.05 || px > 0.95 || py < 0.05 || py > 0.95) return -9;
+    sc += 0.7 * Math.max(thirdsFit(px, py), 0.7 * Math.exp(-((px - 0.5) ** 2 + (py - 0.5) ** 2) / 0.0098));
+  }
+  if (ctx.cur) sc -= 0.12 * Math.hypot((fx + cw / 2 - ctx.cur.x) / cw, (fy + ch / 2 - ctx.cur.y) / ch);
+  return sc;
+}
+// Slide a frame the size of your current zoom across everything the wide lens sees
+function searchBest(cw, ch, ctx) {
+  const vw = V.vw, vh = V.vh, nx = cw < vw - 1 ? 9 : 1, ny = ch < vh - 1 ? 9 : 1;
+  let best = null;
+  for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
+    const fx = nx > 1 ? (vw - cw) * i / (nx - 1) : (vw - cw) / 2, fy = ny > 1 ? (vh - ch) * j / (ny - 1) : (vh - ch) / 2;
+    const s = scoreFrame(fx, fy, cw, ch, ctx);
+    if (!best || s > best.s) best = { x: fx + cw / 2, y: fy + ch / 2, s };
+  }
+  if (best && (nx > 1 || ny > 1)) {
+    const stx = nx > 1 ? (vw - cw) / (nx - 1) / 2 : 0, sty = ny > 1 ? (vh - ch) / (ny - 1) / 2 : 0, b0 = best;
+    for (const dj of [-1, 0, 1]) for (const di of [-1, 0, 1]) {
+      if (!di && !dj) continue;
+      const cx = clamp(b0.x + di * stx, cw / 2, vw - cw / 2), cy = clamp(b0.y + dj * sty, ch / 2, vh - ch / 2);
+      const s = scoreFrame(cx - cw / 2, cy - ch / 2, cw, ch, ctx);
+      if (s > best.s) best = { x: cx, y: cy, s };
+    }
+  }
+  return best;
+}
+function labelFor(tx, ty, cw, ch, L) {
+  const inF = (x, y) => Math.abs(x - tx) < cw * 0.45 && Math.abs(y - ty) < ch * 0.45;
+  if (SG.manual) return 'Your pick';
+  if (L.sun && L.sun.sky && inF(L.sun.x, L.sun.y)) return L.sun.warm ? 'Setting sun' : 'Sun';
+  if (L.sal && L.sal.strength >= 1.5 && inF(L.sal.cx, L.sal.cy)) return L.sal.label;
+  if (L.warm > 0.15) return 'Golden light';
+  return 'Better frame';
+}
+function adoptTarget(B, now, c, L) {
+  SG.tgt = { x: B.x, y: B.y }; SG.disp = { x: B.x, y: B.y }; SG.score = B.s; SG.ray = toWorld(B.x, B.y);
+  SG.worse = 0; SG.weak = 0; SG.cand = null; SG.aligned = false; SG.shownAt = now; SG.inWide = true;
+  SG.label = labelFor(B.x, B.y, c.w, c.h, L); SG.labelAt = now;
 }
 
 /* ---------------- scene analysis ---------------- */
@@ -707,7 +856,7 @@ function colorName(r, g, b) {
 
 function saliency(sun) {
   const w = AN.w, h = AN.h, R = AN.R, G = AN.G, B = AN.B;
-  const GW = 12, GH = Math.max(8, Math.round(GW * h / w)), M = GW * GH;
+  const GW = 16, GH = Math.max(10, Math.round(GW * h / w)), M = GW * GH;
   let C = AN.cells;
   if (!C || C.GW !== GW || C.GH !== GH) {
     C = AN.cells = { GW, GH, peak: 1, r: new Float32Array(M), g: new Float32Array(M), b: new Float32Array(M), n: new Float32Array(M), L: new Float32Array(M), A: new Float32Array(M), Bb: new Float32Array(M), sal: new Float32Array(M), q: new Int32Array(M), in: new Uint8Array(M) };
@@ -782,16 +931,6 @@ function borderSal(fr) {
   }
   return n ? s / n : 0;
 }
-function sideInterest(fr, ax, ay) {
-  const x0 = ax < 0.5 ? 0.55 : ax > 0.5 ? 0.05 : 0.1, x1 = ax < 0.5 ? 0.95 : ax > 0.5 ? 0.45 : 0.9;
-  const y0 = ay < 0.5 ? 0.55 : ay > 0.5 ? 0.05 : 0.1, y1 = ay < 0.5 ? 0.95 : ay > 0.5 ? 0.45 : 0.9;
-  let s = 0, n = 0;
-  for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) {
-    const v = salAt(fr.x + fr.w * (x0 + (x1 - x0) * (i + 0.5) / 4), fr.y + fr.h * (y0 + (y1 - y0) * (j + 0.5) / 4));
-    if (v >= 0) { s += v; n++; }
-  }
-  return n ? Math.min(0.6, s / n) : 0;
-}
 // Strong, frame-wide bright-over-dark edge = horizon (only when level-ish and outdoors-ish)
 function findHorizon() {
   const w = AN.w, h = AN.h, Y = AN.Y, th = Math.max(2, Math.floor(h * 0.15));
@@ -806,40 +945,6 @@ function findHorizon() {
   }
   return best > 14 ? by / h : null;
 }
-// Tries each rule-of-thirds spot (and centre) for the subject at your current zoom and scores
-// the resulting frame: nothing sliced at the edges, balanced, horizon off-centre, least movement.
-function chooseAnchor(sub, cw, ch, kind, hy) {
-  const sx = sub.x + sub.w / 2, sy = sub.y + sub.h / 2, T = 1 / 3, U = 2 / 3;
-  const big = sub.w > cw * 0.45 || sub.h > ch * 0.45;
-  const opts = big ? [[0.5, 0.5], [T, 0.5], [U, 0.5], [0.5, T], [0.5, U]] : [[T, T], [U, T], [T, U], [U, U], [0.5, 0.5], [0.5, T], [0.5, U]];
-  const cur = currentCrop(), ccx = cur.x + cur.w / 2, ccy = cur.y + cur.h / 2;
-  const scores = {}; let best = null;
-  for (const [ax, ay] of opts) {
-    const fr = { x: sx - ax * cw, y: sy - ay * ch, w: cw, h: ch };
-    let s = 0.6 * visibleFrac(fr) - 0.9 * borderSal(fr) + 0.35 * sideInterest(fr, ax, ay);
-    s -= 0.35 * Math.hypot((fr.x + cw / 2 - ccx) / cw, (fr.y + ch / 2 - ccy) / ch);
-    if (ax === 0.5 && ay === 0.5) s -= big ? 0 : 0.12;
-    if ((kind === 'sun' || kind === 'sky') && ay > 0.5) s -= 0.35;
-    if (kind === 'silhouette' && ay < 0.5) s -= 0.1;
-    if (hy != null) {
-      const p = (hy - fr.y) / ch;
-      if (p > 0.05 && p < 0.95) { if (Math.abs(p - 0.5) < 0.1) s -= 0.3; else if (Math.abs(p - T) < 0.07 || Math.abs(p - U) < 0.07) s += 0.15; }
-    }
-    const key = ax.toFixed(2) + ',' + ay.toFixed(2);
-    scores[key] = s;
-    if (!best || s > best.s) best = { ax, ay, s, key };
-  }
-  return { best, scores };
-}
-function idealZoomFor(sub, kind) {
-  const F = fullDims(); let cw;
-  if (kind === 'sun') cw = Math.max(sub.w * 9, F.w * 0.42);
-  else if (kind === 'sky') cw = F.w * 0.6;
-  else cw = Math.max(Math.sqrt(sub.w * sub.h / 0.18 * UI.A), sub.w * 1.7, sub.h * 1.7 * UI.A);
-  cw = clamp(cw, F.w / 10, F.w);
-  return clamp(CAM.base * F.w / cw, CAM.base, MAXZ);
-}
-
 function analyze(now) {
   const vw = V.vw, vh = V.vh;
   const s = 160 / Math.max(vw, vh);
@@ -849,21 +954,21 @@ function analyze(now) {
   let d;
   try { AN.ctx.drawImage(video, 0, 0, w, h); d = AN.ctx.getImageData(0, 0, w, h).data; } catch (e) { return; }
   const N = w * h, Y = AN.Y, R = AN.R, G = AN.G, B = AN.B;
-  let warm = 0, wx = 0, wy = 0, blue = 0;
+  let warm = 0, blue = 0;
   for (let i = 0, j = 0; i < N; i++, j += 4) {
     const r = d[j], g = d[j + 1], b = d[j + 2];
     R[i] = r; G[i] = g; B[i] = b;
     const yv = 0.2126 * r + 0.7152 * g + 0.0722 * b; Y[i] = yv;
     const mx = r > g ? (r > b ? r : b) : (g > b ? g : b), mn = r < g ? (r < b ? r : b) : (g < b ? g : b);
     const sat = mx ? (mx - mn) / mx : 0;
-    if (r > b * 1.3 && r >= g && sat > 0.28 && yv > 55) { warm++; wx += i % w; wy += (i / w) | 0; }
+    if (r > b * 1.3 && r >= g && sat > 0.28 && yv > 55) warm++;
     else if (b > r * 1.15 && b >= g && sat > 0.2 && yv < 150) blue++;
   }
   const mv = globalShift();
   AN.motion = AN.motion * 0.6 + (mv.ok ? Math.hypot(mv.dx, mv.dy) : 3) * 0.4;
-  if (mv.ok && (mv.dx || mv.dy)) shiftBoxes(mv.dx / AN.s, mv.dy / AN.s);
+  if (mv.ok && (mv.dx || mv.dy)) shiftAll(mv.dx / AN.s, mv.dy / AN.s);
 
-  const c = currentCrop();
+  const c = currentCrop(), ccx = c.x + c.w / 2, ccy = c.y + c.h / 2;
   const x0 = clamp(Math.floor(c.x * AN.s), 0, w - 1), x1 = clamp(Math.ceil((c.x + c.w) * AN.s), x0 + 1, w);
   const y0 = clamp(Math.floor(c.y * AN.s), 0, h - 1), y1 = clamp(Math.ceil((c.y + c.h) * AN.s), y0 + 1, h);
   const hist = AN.hist; hist.fill(0);
@@ -872,9 +977,8 @@ function analyze(now) {
   const meanC = sum / Math.max(1, n), clipC = clip / Math.max(1, n);
   const p5 = pct(hist, n, 0.05), p95 = pct(hist, n, 0.95);
   const warmFrac = warm / N, blueFrac = blue / N;
-  const sun = findSun();
-  const sal = saliency(sun);
-  const hy = findHorizon();
+  const sun = findSun(), sal = saliency(sun), hy = findHorizon();
+  buildSAT();
   const golden = warmFrac > 0.12 || !!(sun && sun.sky && sun.warm);
 
   let sunIn = false, sunNear = false, ghost = null, haze = false;
@@ -888,82 +992,77 @@ function analyze(now) {
     haze = (sunIn || sunNear) && p5 > 50 && (p95 - p5) < 150;
   }
 
-  // ---- what's worth pointing at
-  if (SG.subj && visibleFrac(SG.subj) < 0.3) clearSugg();
-  const on = CFG.assist && CFG.guide;
-  let cand = null;
-  if (on && now > SG.snooze && !SG.manual) {
-    let subj = null, kind = '', label = '';
-    if (sun && sun.sky) {
-      kind = 'sun'; label = sun.warm ? 'Setting sun' : 'Sun';
-      const r = Math.max(sun.r * vw, vw * 0.012);
-      subj = { x: sun.x * vw - r, y: sun.y * vh - r, w: 2 * r, h: 2 * r };
-    } else if (sal.strength >= 1.55 && sal.w * sal.h < 0.4) {
-      kind = sal.kind; label = sal.label;
-      subj = { x: sal.x * vw, y: sal.y * vh, w: sal.w * vw, h: sal.h * vh };
-    } else if (warmFrac > 0.2 && warm > 0) {
-      kind = 'sky'; label = 'Golden sky';
-      const cx = (wx / warm) / w * vw, cy = (wy / warm) / h * vh;
-      subj = { x: cx - vw * 0.08, y: cy - vw * 0.08, w: vw * 0.16, h: vw * 0.16 };
-    }
-    if (subj) cand = { subj, kind, label };
+  // ---- find the best frame at your zoom, remember it, and steer you to it
+  const on = CFG.assist && (CFG.guide || SG.manual);
+  const sunV = sun ? { x: sun.x * vw, y: sun.y * vh, sky: sun.sky, warm: sun.warm } : null;
+  const L = { sun: sunV, sal: { cx: (sal.x + sal.w / 2) * vw, cy: (sal.y + sal.h / 2) * vh, strength: sal.strength, label: sal.label }, warm: warmFrac };
+  const ctx = { hy: hy != null ? hy * vh : null, sun: sunV, pick: SG.pick, str: sal.strength, cur: { x: ccx, y: ccy } };
+  const curS = scoreFrame(c.x, c.y, c.w, c.h, ctx);
+  AN.curS = curS;
+  if (!on && SG.tgt) clearSugg();
+  if (SG.tgt) {
+    if (!mv.ok && SG.ray) { const p = fromWorld(SG.ray); if (p) { SG.tgt.x = p.x; SG.tgt.y = p.y; } }
+    SG.inWide = SG.tgt.x >= c.w / 2 - 2 && SG.tgt.x <= vw - c.w / 2 + 2 && SG.tgt.y >= c.h / 2 - 2 && SG.tgt.y <= vh - c.h / 2 + 2;
+    if (SG.inWide) {
+      SG.score = scoreFrame(SG.tgt.x - c.w / 2, SG.tgt.y - c.h / 2, c.w, c.h, Object.assign({}, ctx, { cur: null }));
+      if (S.steady) { const r = toWorld(SG.tgt.x, SG.tgt.y); if (r) SG.ray = r; }
+    } else SG.score -= 0.003;
+    const far = Math.hypot((SG.tgt.x - ccx) / c.w, (SG.tgt.y - ccy) / c.h);
+    if (!SG.manual && SG.score < curS + 0.02 && far > 0.1) { if (++SG.weak > 12) clearSugg(); } else SG.weak = 0;
   }
-  if (on && !SG.manual) {
-    if (!SG.subj) {
-      if (cand && S.steady) {
-        if (SG.cand && iou(grow(SG.cand.subj), grow(cand.subj)) > 0.3) { if (now - SG.candSince > 650) adopt(cand, now); }
-        else { SG.cand = cand; SG.candSince = now; }
-      } else if (!cand) SG.cand = null;
-    } else if (S.steady && now - SG.lastCheck > 900) {
-      SG.lastCheck = now;
-      if (!cand) { SG.miss++; if (SG.miss >= 4) clearSugg(); }
-      else if (iou(grow(cand.subj), grow(SG.subj)) < 0.2) { SG.miss++; if (SG.miss >= 3) adopt(cand, now); }
-      else {
-        SG.miss = 0; SG.label = cand.label; SG.kind = cand.kind;
-        for (const k of ['x', 'y', 'w', 'h']) SG.subj[k] += (cand.subj[k] - SG.subj[k]) * 0.2;
+  let Bst = null;
+  if (on && now > SG.snooze) {
+    Bst = searchBest(c.w, c.h, ctx);
+    if (Bst && Bst.s > -5) {
+      if (!SG.tgt) {
+        const want = SG.manual || (S.steady && Bst.s > curS + 0.1);
+        if (!want) SG.cand = null;
+        else if (SG.manual) adoptTarget(Bst, now, c, L);
+        else if (!SG.cand || Math.hypot(Bst.x - SG.cand.x, Bst.y - SG.cand.y) > c.w * 0.1) SG.cand = { x: Bst.x, y: Bst.y, t: now };
+        else if (now - SG.cand.t > 500) adoptTarget(Bst, now, c, L);
+      } else if (S.steady) {
+        const dist = Math.hypot(Bst.x - SG.tgt.x, Bst.y - SG.tgt.y) / c.w;
+        if (dist < 0.12 && SG.inWide) { SG.tgt.x += (Bst.x - SG.tgt.x) * 0.2; SG.tgt.y += (Bst.y - SG.tgt.y) * 0.2; SG.worse = 0; }
+        else if (Bst.s > SG.score + (SG.inWide ? 0.1 : 0.15)) { if (++SG.worse >= 4) adoptTarget(Bst, now, c, L); }
+        else SG.worse = 0;
       }
     }
   }
-  if (!on && !SG.manual && SG.subj) clearSugg();
-
-  // ---- where it should sit in your frame, and how to get it there
-  if (SG.subj) {
-    if (!SG.anchor || now - SG.lastAnchor > 900) {
-      SG.lastAnchor = now;
-      const r = chooseAnchor(SG.subj, c.w, c.h, SG.kind, hy != null ? hy * vh : null);
-      const cur = SG.anchor && r.scores[SG.anchor.key] != null ? r.scores[SG.anchor.key] : -9;
-      if (!SG.anchor || (r.best.key !== SG.anchor.key && r.best.s > cur + 0.1)) SG.anchor = r.best;
-      SG.zoomHint = null;
-      if (!SG.manual && ZP.length) {
-        const zi = idealZoomFor(SG.subj, SG.kind), act = activePreset();
-        let pre = ZP[0]; for (const z of ZP) if (Math.abs(Math.log(z.p / zi)) < Math.abs(Math.log(pre.p / zi))) pre = z;
-        if (pre !== act && Math.abs(Math.log(zi / V.z)) > 0.41) SG.zoomHint = pre.p;
-      }
+  if (SG.tgt) {
+    if (now - SG.labelAt > 1200 && SG.inWide) { SG.label = labelFor(SG.tgt.x, SG.tgt.y, c.w, c.h, L); SG.labelAt = now; }
+    SG.dx = (SG.tgt.x - ccx) / c.w; SG.dy = (SG.tgt.y - ccy) / c.h;
+    const dd = Math.hypot(SG.dx, SG.dy * c.h / c.w), same = SG.inWide && curS >= SG.score - 0.02;
+    if (SG.aligned) { if (dd > 0.065 && !(same && dd < 0.25)) SG.aligned = false; }
+    else if (dd < 0.035 || (same && dd < 0.25)) { SG.aligned = true; SG.alignedAt = now; }
+  } else SG.aligned = false;
+  // subject outline (drawn only when it's part of the suggested frame)
+  if (sun && sun.sky) { const r = Math.max(sun.r * vw, vw * 0.012); SG.subj = { x: sun.x * vw - r, y: sun.y * vh - r, w: 2 * r, h: 2 * r }; }
+  else if (sal.strength >= 1.5 && sal.w * sal.h < 0.4 && !SG.manual) SG.subj = { x: sal.x * vw, y: sal.y * vh, w: sal.w * vw, h: sal.h * vh };
+  else SG.subj = null;
+  // would another zoom make a clearly better photo?
+  if (on && S.steady && ZP.length && now - SG.lastZoom > 900) {
+    SG.lastZoom = now;
+    const F = fullDims(), act = activePreset();
+    let bestP = null, bestS = (Bst ? Bst.s : curS) + 0.15;
+    for (const z of ZP) {
+      if (z === act) continue;
+      const k = z.p / CAM.base, cw = F.w / k, ch = F.h / k;
+      if (cw > vw + 1 || ch > vh + 1) continue;
+      const Bz = searchBest(cw, ch, ctx);
+      if (Bz && Bz.s > bestS) { bestS = Bz.s; bestP = z.p; }
     }
-    const sx = SG.subj.x + SG.subj.w / 2, sy = SG.subj.y + SG.subj.h / 2;
-    SG.dx = (sx - c.x) / c.w - SG.anchor.ax; SG.dy = (sy - c.y) / c.h - SG.anchor.ay;
-    const dist = Math.hypot(SG.dx, SG.dy * c.h / c.w);
-    if (SG.aligned) { if (dist > 0.075) SG.aligned = false; }
-    else if (dist < 0.045) { SG.aligned = true; SG.alignedAt = now; }
-  } else { SG.aligned = false; SG.zoomHint = null; }
+    SG.zoomHint = bestP;
+  } else if (!on) SG.zoomHint = null;
 
-  // ---- score
-  let sc = 38;
-  sc += Math.min(24, warmFrac * 120);
-  if (sun && sun.sky && sun.warm) sc += 12;
-  sc += clamp((sal.strength - 1) * 9, 0, 18);
-  if (clipC > 0.08) sc -= 12;
-  if (meanC < 35) sc -= 10;
-  if (p95 - p5 < 60) sc -= 10;
+  // ---- score for the shutter ring
   const lvOk = S.hasOri && S.usable;
-  if (lvOk) sc += Math.abs(S.dev) < 1.2 ? 8 : -Math.min(10, Math.abs(S.dev) * 2);
-  if (SG.aligned) sc += 10;
-  if (ghost) sc -= 6; if (haze) sc -= 8;
-  if (!S.steady) sc -= 15;
-  AN.score = AN.score * 0.7 + clamp(sc, 0, 100) * 0.3;
+  let q = curS / 0.8 * 100;
+  if (lvOk) q += Math.abs(S.dev) < 1.2 ? 6 : -Math.min(10, Math.abs(S.dev) * 2);
+  if (ghost) q -= 6; if (haze) q -= 8; if (!S.steady) q -= 12;
+  AN.score = AN.score * 0.7 + clamp(q, 0, 100) * 0.3;
 
   // ---- chips
-  const chips = [];
+  const chips = [], P = proEff();
   if (CFG.warnings) {
     const Lw = sun && sun.sky ? 'Sun' : 'Bright light';
     if (ghost) chips.push(['Flare ghost in frame. Shift a little to move it', 'warn']);
@@ -972,66 +1071,75 @@ function analyze(now) {
     else if (sun && sunIn && sun.broken) chips.push([Lw + ' through branches will streak into a starburst', '']);
     else if (sun && sunIn && sun.sky) chips.push(['Sun in frame, watch for flare', '']);
     if (clipC > 0.07 && !(sun && sunIn && clipC < 0.12)) chips.push(['Highlights are clipping. Lower exposure', '']);
-    if (meanC < 32) chips.push(['Low light. Brace the phone', '']);
+    if (meanC < 32 && P.frames < 2) chips.push(['Low light. Try a slower shutter and brace the phone', '']);
   }
+  if (P.frames > 1) chips.unshift(['Long exposure ' + fmtSh(P.sh) + '. Brace the phone', '']);
   // ---- message
   let msg = '', tone = '';
-  const fast = S.hasRate ? S.rate > 45 : AN.motion > 3;
+  const fast = S.shake > 3;
   const tilted = lvOk && CFG.level && S.steadyFor > 500 && Math.abs(S.dev) > 2.5 && Math.abs(S.dev) < 20;
-  const guiding = on && SG.subj && SG.anchor;
-  if (guiding && !SG.aligned) { msg = guideText(SG.dx, SG.dy); tone = 'glint'; }
+  const guiding = on && SG.tgt;
+  if (SHOOT.msg) { msg = SHOOT.msg; tone = 'glint'; }
+  else if (guiding && !SG.aligned) { msg = guideText(SG.dx, SG.dy); tone = 'glint'; }
   else if (fast) msg = '';
   else if (tilted) { msg = 'Tilted ' + Math.round(Math.abs(S.dev)) + '°, level it'; tone = 'glint'; }
   else if (guiding && SG.aligned) { msg = golden ? 'Right there, beautiful light' : 'Right there, take it'; tone = 'go'; }
   else if (AN.score >= 72 && S.steady) { msg = golden ? 'Beautiful light, stay there' : 'Good frame, take it'; tone = 'go'; }
-  else if (CFG.assist) msg = 'Scouting the frame';
+  else if (on) msg = curS < 0.25 ? 'Pan slowly, I’ll find the best spot' : 'Scouting the frame';
   AN.info = { chips: chips.slice(0, 2), msg, tone, golden, sunIn: sunIn && !!(sun && sun.sky), low: meanC < 40, blue: blueFrac > 0.3 };
 }
 
 /* ---------------- overlays ---------------- */
-const $box = el('box'), $tag = el('tag'), $edge = el('edge'), $guide = el('guide'), $gline = el('gline'), $target = el('target');
-const $level = el('level'), $lv = el('lv'), $lm = el('lm'), $lock = el('lock'), $msg = el('msg'), $chips = el('chips'), $arc = el('arc');
+const $box = el('box'), $edge = el('edge'), $guide = el('guide'), $gline = el('gline'), $target = el('target'), $tl = el('tl'), $aim = el('aim');
+const $level = el('level'), $lv = el('lv'), $lm = el('lm'), $lock = el('lock'), $msg = el('msg'), $chips = el('chips'), $arc = el('arc'), $noise = el('noise');
 const ARC_LEN = 2 * Math.PI * 40;
 $arc.style.strokeDasharray = ARC_LEN;
-let lastChips = '', lastMsg = '', lastTag = '';
+let lastChips = '', lastMsg = '', lastTL = '';
 function drawOverlays(now, dt) {
   const c = currentCrop(), s = UI.vfW / c.w, W = UI.vfW, H = UI.vfH;
-  if (SG.subj && SG.disp) { const a = 1 - Math.exp(-dt * 12); for (const k of ['x', 'y', 'w', 'h']) SG.disp[k] += (SG.subj[k] - SG.disp[k]) * a; }
-  let boxOn = false, edgeOn = false, guideOn = false, tgtOn = false;
-  if (CFG.assist && (CFG.guide || SG.manual) && SG.subj && SG.disp && SG.anchor) {
-    const cx = (SG.disp.x + SG.disp.w / 2 - c.x) * s, cy = (SG.disp.y + SG.disp.h / 2 - c.y) * s;
-    const bw = clamp(SG.disp.w * s + 20, 56, W * 0.9), bh = clamp(SG.disp.h * s + 20, 56, H * 0.9);
-    const tx = SG.anchor.ax * W, ty = SG.anchor.ay * H;
-    if (!SG.aligned) { tgtOn = true; $target.style.transform = `translate(${tx.toFixed(1)}px,${ty.toFixed(1)}px)`; }
-    if (cx > 0 && cx < W && cy > 0 && cy < H) {
-      boxOn = true;
-      $box.style.transform = `translate(${(cx - bw / 2).toFixed(1)}px,${(cy - bh / 2).toFixed(1)}px)`;
-      $box.style.width = bw.toFixed(1) + 'px'; $box.style.height = bh.toFixed(1) + 'px';
-      $box.classList.toggle('up', cy + bh / 2 > H - 50);
-      $box.classList.toggle('ok', SG.aligned);
-      if (lastTag !== SG.label) { lastTag = SG.label; $tag.textContent = SG.label; }
-      const dist = Math.hypot(tx - cx, ty - cy);
-      if (!SG.aligned && dist > 40) {
-        const ux = (tx - cx) / dist, uy = (ty - cy) / dist;
-        const t = Math.min(ux ? (bw / 2) / Math.abs(ux) : 1e9, uy ? (bh / 2) / Math.abs(uy) : 1e9);
-        if (t < dist - 22) {
-          guideOn = true;
-          $gline.setAttribute('x1', (cx + ux * t).toFixed(1)); $gline.setAttribute('y1', (cy + uy * t).toFixed(1));
-          $gline.setAttribute('x2', (tx - ux * 20).toFixed(1)); $gline.setAttribute('y2', (ty - uy * 20).toFixed(1));
+  let tgtOn = false, aimOn = false, guideOn = false, boxOn = false, edgeOn = false;
+  if (CFG.assist && SG.tgt) {
+    if (!SG.disp) SG.disp = { x: SG.tgt.x, y: SG.tgt.y };
+    const a = 1 - Math.exp(-dt * (S.steady ? 7 : 16));
+    SG.disp.x += (SG.tgt.x - SG.disp.x) * a; SG.disp.y += (SG.tgt.y - SG.disp.y) * a;
+    const tx = (SG.disp.x - c.x) * s, ty = (SG.disp.y - c.y) * s, ok = SG.aligned;
+    if (tx > 8 && tx < W - 8 && ty > 8 && ty < H - 8) {
+      tgtOn = true;
+      $target.style.transform = `translate(${tx.toFixed(1)}px,${ty.toFixed(1)}px)`;
+      $target.classList.toggle('ok', ok); $target.classList.toggle('up', ty > H - 70);
+      if (lastTL !== SG.label) { lastTL = SG.label; $tl.textContent = SG.label; }
+      if (!ok) {
+        aimOn = true;
+        const dist = Math.hypot(tx - W / 2, ty - H / 2);
+        if (dist > 46) {
+          guideOn = true; const ux = (tx - W / 2) / dist, uy = (ty - H / 2) / dist;
+          $gline.setAttribute('x1', (W / 2 + ux * 12).toFixed(1)); $gline.setAttribute('y1', (H / 2 + uy * 12).toFixed(1));
+          $gline.setAttribute('x2', (tx - ux * 22).toFixed(1)); $gline.setAttribute('y2', (ty - uy * 22).toFixed(1));
         }
       }
     } else {
-      edgeOn = true;
-      const horiz = Math.abs(cx - W / 2) / W > Math.abs(cy - H / 2) / H;
-      const pre = horiz ? (cx < 0 ? '← ' : '') : (cy < 0 ? '↑ ' : '');
-      const post = horiz ? (cx > W ? ' →' : '') : (cy > H ? ' ↓' : '');
-      $edge.textContent = pre + SG.label + post;
-      $edge.style.transform = `translate(${clamp(cx, 70, W - 70).toFixed(1)}px,${clamp(cy, 60, H - 60).toFixed(1)}px) translate(-50%,-50%)`;
+      edgeOn = true; aimOn = true;
+      const horiz = Math.abs(tx - W / 2) / W > Math.abs(ty - H / 2) / H;
+      $edge.textContent = (horiz ? (tx < 0 ? '← ' : '') : (ty < 0 ? '↑ ' : '')) + SG.label + (horiz ? (tx > W ? ' →' : '') : (ty > H ? ' ↓' : ''));
+      $edge.style.transform = `translate(${clamp(tx, 70, W - 70).toFixed(1)}px,${clamp(ty, 60, H - 60).toFixed(1)}px) translate(-50%,-50%)`;
     }
+    if (SG.subj && Math.abs(SG.subj.x + SG.subj.w / 2 - SG.tgt.x) < c.w * 0.45 && Math.abs(SG.subj.y + SG.subj.h / 2 - SG.tgt.y) < c.h * 0.45) {
+      if (!SG.sdisp) SG.sdisp = Object.assign({}, SG.subj);
+      const b = 1 - Math.exp(-dt * 8); for (const k of ['x', 'y', 'w', 'h']) SG.sdisp[k] += (SG.subj[k] - SG.sdisp[k]) * b;
+      const bw = clamp(SG.sdisp.w * s + 16, 48, W * 0.8), bh = clamp(SG.sdisp.h * s + 16, 48, H * 0.8);
+      const bx = (SG.sdisp.x + SG.sdisp.w / 2 - c.x) * s, by = (SG.sdisp.y + SG.sdisp.h / 2 - c.y) * s;
+      if (bx > 0 && bx < W && by > 0 && by < H) {
+        boxOn = true;
+        $box.style.transform = `translate(${(bx - bw / 2).toFixed(1)}px,${(by - bh / 2).toFixed(1)}px)`;
+        $box.style.width = bw.toFixed(1) + 'px'; $box.style.height = bh.toFixed(1) + 'px';
+        $box.classList.toggle('ok', ok);
+      }
+    } else SG.sdisp = null;
   }
+  $target.classList.toggle('show', tgtOn); $aim.classList.toggle('show', aimOn); $guide.classList.toggle('show', guideOn);
   $box.classList.toggle('show', boxOn); $edge.classList.toggle('show', edgeOn);
-  $guide.classList.toggle('show', guideOn); $target.classList.toggle('show', tgtOn);
 
+  if (NOISE_ON) $noise.style.backgroundPosition = `${(Math.random() * 128) | 0}px ${(Math.random() * 128) | 0}px`;
   const showLevel = CFG.level && S.hasOri && S.usable && S.steadyFor > 500;
   $level.classList.toggle('show', showLevel);
   if (S.hasOri) {
@@ -1040,7 +1148,7 @@ function drawOverlays(now, dt) {
     $lv.style.transform = `rotate(${S.ref}deg)`;
     $lm.style.transform = `rotate(${flat ? 0 : clamp(S.dev, -25, 25).toFixed(2)}deg)`;
   }
-  const al = !!(SG.subj && SG.aligned && CFG.assist);
+  const al = !!(SG.tgt && SG.aligned && CFG.assist);
   $lock.classList.toggle('on', al);
   $lock.classList.toggle('dim', al && now - SG.alignedAt > 1200);
 
@@ -1051,12 +1159,17 @@ function drawOverlays(now, dt) {
       lastChips = ck; $chips.innerHTML = '';
       for (const [t, cls] of info.chips) { const d = document.createElement('div'); d.className = 'chip' + (cls ? ' ' + cls : ''); d.textContent = t; $chips.append(d); }
     }
-    const k2 = info.msg + '|' + info.tone;
-    if (k2 !== lastMsg) { lastMsg = k2; $msg.textContent = info.msg; $msg.className = info.tone; }
   }
-  const sc = CFG.assist ? AN.score : 0;
-  $arc.style.strokeDashoffset = ARC_LEN * (1 - clamp((sc - 45) / 45, 0, 1));
-  $arc.style.opacity = CFG.assist && sc > 50 ? 1 : 0;
+  const m = SHOOT.msg ? SHOOT.msg : info ? info.msg : '', tn = SHOOT.msg ? 'glint' : info ? info.tone : '';
+  if (m + '|' + tn !== lastMsg) { lastMsg = m + '|' + tn; $msg.textContent = m; $msg.className = tn; }
+  if (SHOOT.prog != null) {
+    $arc.classList.add('prog'); $arc.style.opacity = 1; $arc.style.strokeDashoffset = ARC_LEN * (1 - SHOOT.prog);
+  } else {
+    $arc.classList.remove('prog');
+    const sc = CFG.assist ? AN.score : 0;
+    $arc.style.strokeDashoffset = ARC_LEN * (1 - clamp((sc - 45) / 45, 0, 1));
+    $arc.style.opacity = CFG.assist && sc > 50 ? 1 : 0;
+  }
 }
 
 /* ---------------- main loop ---------------- */
@@ -1068,7 +1181,7 @@ function loop(now) {
   const dt = Math.min(0.1, Math.max(0.001, (now - (lastT || now)) / 1000)); lastT = now;
   sensorsTick(now);
   if (EDITOR_OPEN) return;
-  if (now - AN.last > 85) { AN.last = now; analyze(now); }
+  if (now - AN.last > 85 && !(SHOOT.busy && SHOOT.prog != null)) { AN.last = now; analyze(now); }
   updateView(dt);
   drawOverlays(now, dt);
 }
@@ -1085,7 +1198,7 @@ vf.addEventListener('touchmove', e => {
   if (pinch && e.touches.length === 2) {
     e.preventDefault();
     const z = clamp(pinch.z0 * tdist(e.touches) / pinch.d0, CAM.base, MAXZ);
-    V.z = V.tz = z; UI.userZoom = z; UI.lastUserZoom = performance.now(); SG.lastAnchor = 0;
+    V.z = V.tz = z; UI.userZoom = z; UI.lastUserZoom = performance.now(); onZoomChanged();
   } else if (tap && e.touches.length === 1) {
     const t = e.touches[0]; if (Math.hypot(t.clientX - tap.x, t.clientY - tap.y) > 12) tap = null;
   }
@@ -1099,24 +1212,79 @@ vf.addEventListener('click', e => { if (Date.now() - lastTouch < 700) return; on
 vf.addEventListener('wheel', e => {
   e.preventDefault();
   const z = clamp(V.tz * Math.exp(-e.deltaY * 0.002), CAM.base, MAXZ);
-  V.tz = z; UI.userZoom = z; UI.lastUserZoom = performance.now(); SG.lastAnchor = 0;
+  V.tz = z; UI.userZoom = z; UI.lastUserZoom = performance.now(); onZoomChanged();
 }, { passive: false });
+function onZoomChanged() { if (SG.tgt && !SG.manual) { SG.tgt = null; SG.disp = null; SG.cand = null; SG.aligned = false; } SG.zoomHint = null; SG.lastZoom = 0; }
 
-// Tap anything to make it the subject; the app then guides you to a good spot for it.
+// Tap anything: it becomes the subject and the app finds the best frame around it
 function onTap(cx, cy) {
   if (!CAM.ready) return;
-  if (!el('expPop').hidden) { el('expPop').hidden = true; return; }
+  if (!el('pro').hidden) { el('pro').hidden = true; syncReadout(); return; }
   const r = vf.getBoundingClientRect(), px = cx - r.left, py = cy - r.top;
   const ring = el('ring'); ring.style.left = px + 'px'; ring.style.top = py + 'px';
   ring.classList.remove('pop'); void ring.offsetWidth; ring.classList.add('pop');
   if (!CFG.assist) return;
   const c = currentCrop(), s = c.w / UI.vfW;
-  const vx = c.x + px * s, vy = c.y + py * s, sz = c.w * 0.06;
-  SG.subj = { x: vx - sz / 2, y: vy - sz / 2, w: sz, h: sz }; SG.disp = Object.assign({}, SG.subj);
-  SG.label = 'Your pick'; SG.kind = 'pick'; SG.manual = true; SG.cand = null; SG.miss = 0;
-  SG.anchor = null; SG.lastAnchor = 0; SG.aligned = false; SG.zoomHint = null;
+  SG.pick = { x: c.x + px * s, y: c.y + py * s }; SG.manual = true;
+  SG.tgt = null; SG.disp = null; SG.cand = null; SG.aligned = false; SG.label = 'Your pick';
   renderAssistBtn();
 }
+
+/* ---------------- pro exposure: real controls where the browser has them, emulated otherwise ---------------- */
+const ISOS = [25, 50, 100, 200, 400, 800, 1600, 3200, 6400];
+const SHS = [1 / 4000, 1 / 2000, 1 / 1000, 1 / 500, 1 / 250, 1 / 125, 1 / 60, 1 / 30, 1 / 15, 1 / 8, 1 / 4, 1 / 2, 1, 2, 4];
+const PRO = { ev: 0, isoI: -1, shI: -1 };
+let NOISE_ON = false;
+function fmtSh(s) { return s >= 0.95 ? Math.round(s) + 's' : '1/' + Math.round(1 / s) + 's'; }
+// Behaves like a real camera: set ISO and the shutter follows (and vice versa); set both for full manual.
+function proEff() {
+  const isoA = PRO.isoI < 0, shA = PRO.shI < 0;
+  let iso = isoA ? 100 : ISOS[PRO.isoI], sh = shA ? 1 / 60 : SHS[PRO.shI], gain = PRO.ev, nd = false;
+  if (!isoA && shA) sh = (1 / 60) * 100 / iso;
+  else if (isoA && !shA) { iso = 100 * (1 / 60) / sh; if (iso < 25) nd = true; iso = clamp(iso, 25, 12800); }
+  else if (!isoA && !shA) gain += Math.log2(iso / 100) + Math.log2(sh * 60);
+  const frames = CAM.real ? 1 : clamp(Math.round(sh * 30), 1, 120);
+  return { iso: Math.round(iso), sh, gain, nd, frames, manual: !(isoA && shA), isoA, shA };
+}
+function syncReadout() {
+  const P = proEff(), rd = el('readout');
+  const show = (P.manual || PRO.ev !== 0) && el('pro').hidden;
+  rd.hidden = !show;
+  if (show) rd.textContent = `ISO ${P.iso}   ${fmtSh(P.sh)}` + (P.nd ? '   ND' : '') + (PRO.ev ? `   ${PRO.ev > 0 ? '+' : ''}${PRO.ev.toFixed(1)}` : '');
+}
+function applyPro() {
+  const P = proEff();
+  el('evV').textContent = (PRO.ev > 0 ? '+' : '') + PRO.ev.toFixed(1);
+  el('isoV').textContent = PRO.isoI < 0 ? (P.manual ? 'Auto ' + P.iso : 'Auto') : String(P.iso);
+  el('shV').textContent = PRO.shI < 0 ? (P.manual ? 'Auto ' + fmtSh(P.sh) : 'Auto') : fmtSh(P.sh);
+  el('bExp').classList.toggle('on', P.manual || PRO.ev !== 0);
+  let gain = P.gain, iso = P.iso;
+  if (CAM.real) { applyRealExposure(P); gain = CAM.caps.exposureCompensation ? 0 : PRO.ev; iso = 100; }
+  video.style.filter = Math.abs(gain) > 0.01 ? `brightness(${clamp(Math.pow(2, gain / 2.2), 0.08, 6).toFixed(3)})` : '';
+  const op = iso > 100 ? clamp(Math.log2(iso / 100) * 0.07, 0, 0.42) : 0;
+  $noise.style.opacity = op; NOISE_ON = op > 0;
+  syncReadout();
+}
+async function applyRealExposure(P) {
+  const t = CAM.stream && CAM.stream.getVideoTracks()[0], cp = CAM.caps;
+  if (!t) return;
+  try {
+    if (!P.manual) await t.applyConstraints({ advanced: [{ exposureMode: 'continuous' }] });
+    else await t.applyConstraints({ advanced: [{ exposureMode: 'manual', exposureTime: clamp(P.sh * 10000, cp.exposureTime.min, cp.exposureTime.max), iso: clamp(P.iso, cp.iso.min, cp.iso.max) }] });
+    if (cp.exposureCompensation) await t.applyConstraints({ advanced: [{ exposureCompensation: clamp(PRO.ev, cp.exposureCompensation.min, cp.exposureCompensation.max) }] });
+  } catch (e) { CAM.real = false; el('proMode').textContent = 'Emulated on this device'; applyPro(); }
+}
+(function makeNoise() {
+  try {
+    const c = mk(128, 128), g = c.getContext('2d'), im = g.createImageData(128, 128);
+    for (let i = 0; i < im.data.length; i += 4) { const v = 128 + (Math.random() + Math.random() + Math.random() - 1.5) * 110; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; }
+    g.putImageData(im, 0, 0); $noise.style.backgroundImage = `url(${c.toDataURL()})`;
+  } catch (e) {}
+})();
+el('evR').addEventListener('input', e => { PRO.ev = parseFloat(e.target.value) || 0; applyPro(); });
+el('isoR').addEventListener('input', e => { PRO.isoI = (parseInt(e.target.value, 10) || 0) - 1; applyPro(); });
+el('shR').addEventListener('input', e => { PRO.shI = (parseInt(e.target.value, 10) || 0) - 1; applyPro(); });
+el('proReset').addEventListener('click', () => { PRO.ev = 0; PRO.isoI = -1; PRO.shI = -1; el('evR').value = 0; el('isoR').value = 0; el('shR').value = 0; applyPro(); });
 
 /* ---------------- buttons ---------------- */
 const ICON_SPARK = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 3l1.6 5.2L17 10l-5.4 1.8L10 17l-1.6-5.2L3 10l5.4-1.8z"/><path d="M18 13l.8 2.4 2.2.6-2.2.7L18 19l-.8-2.3-2.2-.7 2.2-.6z"/></svg>';
@@ -1136,23 +1304,18 @@ el('assist').addEventListener('click', () => {
 function applyCfgUI() {
   el('bGrid').classList.toggle('on', CFG.grid); el('grid').classList.toggle('on', CFG.grid);
   el('bLevel').classList.toggle('on', CFG.level);
-  el('cAuto').checked = CFG.guide; el('cWarn').checked = CFG.warnings; el('cReview').checked = CFG.review;
+  el('cAuto').checked = CFG.guide; el('cWarn').checked = CFG.warnings; el('cReview').checked = CFG.review; el('cAutoEdit').checked = CFG.autoEdit;
 }
 el('bGrid').addEventListener('click', () => { CFG.grid = !CFG.grid; store.set('grid', CFG.grid); applyCfgUI(); });
 el('bLevel').addEventListener('click', () => { CFG.level = !CFG.level; store.set('level', CFG.level); applyCfgUI(); });
-el('bExp').addEventListener('click', () => { el('expPop').hidden = !el('expPop').hidden; });
-el('expR').addEventListener('input', e => {
-  V.ev = parseFloat(e.target.value) || 0;
-  el('expV').textContent = (V.ev > 0 ? '+' : '') + V.ev.toFixed(1);
-  video.style.filter = V.ev ? `brightness(${Math.pow(2, V.ev / 2.2).toFixed(3)})` : '';
-  el('bExp').classList.toggle('on', V.ev !== 0);
-});
+el('bExp').addEventListener('click', () => { el('pro').hidden = !el('pro').hidden; syncReadout(); });
 el('bMore').addEventListener('click', () => { el('sheet').hidden = false; });
 el('sheetDone').addEventListener('click', () => { el('sheet').hidden = true; });
 el('sheet').addEventListener('click', e => { if (e.target.id === 'sheet') el('sheet').hidden = true; });
 el('cAuto').addEventListener('change', e => { CFG.guide = e.target.checked; store.set('guide', CFG.guide); if (!CFG.guide) clearSugg(); });
 el('cWarn').addEventListener('change', e => { CFG.warnings = e.target.checked; store.set('warnings', CFG.warnings); });
 el('cReview').addEventListener('change', e => { CFG.review = e.target.checked; store.set('review', CFG.review); });
+el('cAutoEdit').addEventListener('change', e => { CFG.autoEdit = e.target.checked; store.set('autoEdit', CFG.autoEdit); });
 el('shutter').addEventListener('click', shoot);
 el('thumb').addEventListener('click', () => { if (shots.length) openEditor(shots[shots.length - 1]); });
 document.addEventListener('keydown', e => { if (e.code === 'Space' && !EDITOR_OPEN && CAM.ready) { e.preventDefault(); shoot(); } });
@@ -1161,6 +1324,7 @@ let toastT = 0;
 function toast(t) { const d = el('toast'); d.textContent = t; d.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => d.classList.remove('on'), 1600); }
 
 /* ---------------- capture ---------------- */
+const SHOOT = { busy: false, msg: '', prog: null };
 function downscale(src, maxLong) {
   let w = src.width, h = src.height, cur = src;
   while (Math.max(w, h) > maxLong * 2) {
@@ -1171,39 +1335,188 @@ function downscale(src, maxLong) {
   const c = mk(fw, fh), g = c.getContext('2d'); g.imageSmoothingQuality = 'high'; g.drawImage(cur, 0, 0, fw, fh);
   return c;
 }
-function shoot() {
-  if (!CAM.ready || !V.vw) return;
-  const c = currentCrop();
-  const k = Math.max(1, 1600 / Math.max(c.w, c.h));
-  const ow = Math.round(c.w * k), oh = Math.round(c.h * k);
-  const ref = S.hasOri ? S.ref : 0, quarter = Math.abs(ref) === 90;
-  const cv = mk(quarter ? oh : ow, quarter ? ow : oh), g = cv.getContext('2d');
+function nextFrame() {
+  return new Promise(res => {
+    let done = false; const fin = () => { if (!done) { done = true; res(); } };
+    if (video.requestVideoFrameCallback) video.requestVideoFrameCallback(fin);
+    setTimeout(fin, video.requestVideoFrameCallback ? 120 : 34);
+  });
+}
+const SHP = { cv: mk(160, 160) }; SHP.g = SHP.cv.getContext('2d', { willReadFrequently: true });
+// Laplacian energy of a native-resolution patch at the frame centre: higher = sharper
+function sharpness(c) {
+  const n = 160, sz = Math.min(n, c.w * 0.5, c.h * 0.5), cx = c.x + c.w / 2, cy = c.y + c.h / 2;
+  try { SHP.g.drawImage(video, cx - sz / 2, cy - sz / 2, sz, sz, 0, 0, n, n); } catch (e) { return 0; }
+  const d = SHP.g.getImageData(0, 0, n, n).data, row = n * 4; let s = 0;
+  for (let y = 1; y < n - 1; y++) for (let x = 1; x < n - 1; x++) {
+    const i = (y * n + x) * 4 + 1, l = d[i] * 4 - d[i - 4] - d[i + 4] - d[i - row] - d[i + row];
+    s += l * l;
+  }
+  return s;
+}
+// Smart shutter: grabs a short burst and keeps the sharpest frame
+async function sharpestOf(c, K) {
+  const k = Math.max(1, 1600 / Math.max(c.w, c.h)), ow = Math.round(c.w * k), oh = Math.round(c.h * k);
+  let best = null, bestS = -1, spare = null;
+  for (let i = 0; i < K; i++) {
+    if (i) await nextFrame();
+    const cv = spare || mk(ow, oh), g = cv.getContext('2d');
+    g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
+    g.drawImage(video, c.x, c.y, c.w, c.h, 0, 0, ow, oh);
+    const sc = sharpness(c);
+    if (sc > bestS) { spare = best; best = cv; bestS = sc; } else spare = cv;
+  }
+  if (spare) spare.width = spare.height = 1;
+  return best;
+}
+function halfRes(a, w, h) {
+  const w2 = w >> 1, h2 = h >> 1, o = new Float32Array(w2 * h2);
+  for (let y = 0; y < h2; y++) for (let x = 0; x < w2; x++) { const i = 2 * y * w + 2 * x; o[y * w2 + x] = (a[i] + a[i + 1] + a[i + w] + a[i + w + 1]) * 0.25; }
+  return o;
+}
+function sadShift(A, Bc, w, h, dx, dy, M) {
+  let s = 0;
+  for (let y = M; y < h - M; y++) { const ra = y * w, rb = (y + dy) * w + dx; for (let x = M; x < w - M; x++) { const t = A[ra + x] - Bc[rb + x]; s += t < 0 ? -t : t; } }
+  return s;
+}
+// content shift of Bc relative to A (Bc(x+dx, y+dy) ≈ A(x, y)), searched around a guess
+function blockShift(A, Bc, w, h, gx, gy) {
+  const w2 = w >> 1, h2 = h >> 1, R = 6, cx = Math.round(gx / 2), cy = Math.round(gy / 2);
+  const M2 = R + Math.max(Math.abs(cx), Math.abs(cy)) + 1;
+  if (2 * M2 + 8 >= Math.min(w2, h2)) return { dx: gx, dy: gy };
+  const A2 = halfRes(A, w, h), B2 = halfRes(Bc, w, h);
+  let best = Infinity, bx = cx, by = cy;
+  for (let dy = cy - R; dy <= cy + R; dy++) for (let dx = cx - R; dx <= cx + R; dx++) { const s = sadShift(A2, B2, w2, h2, dx, dy, M2); if (s < best) { best = s; bx = dx; by = dy; } }
+  const fx = 2 * bx, fy = 2 * by, M = 2 * M2 + 3;
+  if (2 * M + 8 >= Math.min(w, h)) return { dx: fx, dy: fy };
+  const S5 = new Float64Array(25); let b2 = Infinity, ex = fx, ey = fy, bi = 12;
+  for (let j = -2; j <= 2; j++) for (let i = -2; i <= 2; i++) {
+    const k = (j + 2) * 5 + i + 2, s = sadShift(A, Bc, w, h, fx + i, fy + j, M); S5[k] = s;
+    if (s < b2) { b2 = s; ex = fx + i; ey = fy + j; bi = k; }
+  }
+  let sx = 0, sy = 0; const ix = bi % 5, iy = (bi / 5) | 0;
+  if (ix > 0 && ix < 4) { const a = S5[bi - 1], b = S5[bi], c = S5[bi + 1], den = a - 2 * b + c; if (den > 0) sx = clamp(0.5 * (a - c) / den, -0.5, 0.5); }
+  if (iy > 0 && iy < 4) { const a = S5[bi - 5], b = S5[bi], c = S5[bi + 5], den = a - 2 * b + c; if (den > 0) sy = clamp(0.5 * (a - c) / den, -0.5, 0.5); }
+  return { dx: ex + sx, dy: ey + sy };
+}
+// Emulated slow shutter: stacks real video frames in linear light, aligned to cancel
+// hand shake, so moving water, cars and lights blur while the scene stays sharp.
+async function longExposure(c, N) {
+  const k = 1400 / Math.max(c.w, c.h), ow = Math.round(c.w * k), oh = Math.round(c.h * k);
+  const cv = mk(ow, oh), g = cv.getContext('2d', { willReadFrequently: true });
   g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
-  g.translate(cv.width / 2, cv.height / 2); g.rotate(-ref * D2R);
-  try { g.drawImage(video, c.x, c.y, c.w, c.h, -ow / 2, -oh / 2, ow, oh); } catch (e) { toast('Couldn’t read the camera frame'); return; }
-  const dev = S.hasOri && S.usable ? S.dev : 0;
-  const info = AN.info || {};
-  const shot = {
-    cv, w: cv.width, h: cv.height, zoom: V.z, digital: V.z / CAM.base, ultra: CAM.ultra, date: new Date(), ev: V.ev,
-    straight: Math.abs(dev) > 0.3 && Math.abs(dev) < 8 ? -dev : 0,
-    warm: !!info.golden, sun: !!info.sunIn, low: !!info.low, blue: !!info.blue
-  };
-  shot.small = downscale(cv, 256);
-  shot.auto = computeAuto(shot);
-  shots.push(shot); if (shots.length > 10) shots.shift();
-  const tc = el('thumbC'), tg = tc.getContext('2d'), m = Math.min(shot.small.width, shot.small.height);
-  tg.drawImage(shot.small, (shot.small.width - m) / 2, (shot.small.height - m) / 2, m, m, 0, 0, tc.width, tc.height);
-  const b = el('blink'); b.classList.remove('on'); void b.offsetWidth; b.classList.add('on');
-  if (CFG.review) openEditor(shot);
+  const acc = new Float32Array(ow * oh * 3);
+  const sw = Math.round(ow * 200 / Math.max(ow, oh)), sh = Math.round(oh * 200 / Math.max(ow, oh));
+  const sm = mk(sw, sh), sg = sm.getContext('2d', { willReadFrequently: true });
+  const LIN = new Float32Array(256); for (let i = 0; i < 256; i++) LIN[i] = Math.pow(i / 255, 2.2);
+  const cur = new Float32Array(sw * sh); let ref = null, gx = 0, gy = 0;
+  for (let f = 0; f < N; f++) {
+    await nextFrame();
+    g.drawImage(video, c.x, c.y, c.w, c.h, 0, 0, ow, oh);
+    sg.drawImage(cv, 0, 0, sw, sh);
+    const sd = sg.getImageData(0, 0, sw, sh).data; let m = 0;
+    for (let i = 0, j = 0; i < sw * sh; i++, j += 4) { cur[i] = sd[j] * 0.3 + sd[j + 1] * 0.59 + sd[j + 2] * 0.11; m += cur[i]; }
+    m /= sw * sh; for (let i = 0; i < sw * sh; i++) cur[i] -= m;
+    if (!ref) ref = cur.slice(); else { const r = blockShift(ref, cur, sw, sh, gx, gy); gx = r.dx; gy = r.dy; }
+    const ox = Math.round(gx * ow / sw), oy = Math.round(gy * oh / sh);
+    const d = g.getImageData(0, 0, ow, oh).data;
+    for (let y = 0; y < oh; y++) {
+      let sy = y + oy; if (sy < 0) sy = 0; else if (sy >= oh) sy = oh - 1;
+      const srow = sy * ow, arow = y * ow;
+      for (let x = 0; x < ow; x++) {
+        let sx = x + ox; if (sx < 0) sx = 0; else if (sx >= ow) sx = ow - 1;
+        const si = (srow + sx) * 4, ai = (arow + x) * 3;
+        acc[ai] += LIN[d[si]]; acc[ai + 1] += LIN[d[si + 1]]; acc[ai + 2] += LIN[d[si + 2]];
+      }
+    }
+    SHOOT.prog = (f + 1) / N;
+    SHOOT.msg = 'Hold still ' + Math.max(0.1, (N - f - 1) / 30).toFixed(1) + 's';
+  }
+  const INV = new Uint8ClampedArray(4096); for (let i = 0; i < 4096; i++) INV[i] = Math.round(Math.pow(i / 4095, 1 / 2.2) * 255);
+  const out = g.createImageData(ow, oh), od = out.data, q = 4095 / N;
+  for (let i = 0, j = 0; i < ow * oh; i++, j += 4) {
+    od[j] = INV[Math.min(4095, (acc[i * 3] * q) | 0)]; od[j + 1] = INV[Math.min(4095, (acc[i * 3 + 1] * q) | 0)]; od[j + 2] = INV[Math.min(4095, (acc[i * 3 + 2] * q) | 0)]; od[j + 3] = 255;
+  }
+  g.putImageData(out, 0, 0);
+  return cv;
+}
+function rotateUpright(src, ref) {
+  if (!ref) return src;
+  const q = Math.abs(ref) === 90, out = mk(q ? src.height : src.width, q ? src.width : src.height), g = out.getContext('2d');
+  g.translate(out.width / 2, out.height / 2); g.rotate(-ref * D2R); g.drawImage(src, -src.width / 2, -src.height / 2);
+  src.width = src.height = 1;
+  return out;
+}
+// Emulated exposure + ISO: brightness in linear light with a soft highlight roll-off,
+// then sensor-style noise (luma + a little chroma) that grows with ISO.
+function develop(cv, gainEV, iso) {
+  const g0 = Math.pow(2, gainEV), sig = iso > 100 ? 1.7 * Math.sqrt(iso / 100 - 1) : 0;
+  if (Math.abs(gainEV) < 0.01 && !sig) return;
+  const LUT = new Uint8ClampedArray(256);
+  for (let i = 0; i < 256; i++) {
+    let y = Math.pow(i / 255, 2.2) * g0;
+    if (g0 > 1 && y > 0.8) y = 0.8 + 0.2 * (1 - Math.exp(-(y - 0.8) / 0.2));
+    LUT[i] = Math.round(Math.pow(Math.min(1, y), 1 / 2.2) * 255);
+  }
+  const g = cv.getContext('2d'), im = g.getImageData(0, 0, cv.width, cv.height), d = im.data;
+  let seed = 0x9e3779b9 | 0;
+  const rnd = () => { seed ^= seed << 13; seed ^= seed >>> 17; seed ^= seed << 5; return (seed >>> 0) / 4294967296; };
+  for (let j = 0; j < d.length; j += 4) {
+    let r = LUT[d[j]], gg = LUT[d[j + 1]], b = LUT[d[j + 2]];
+    if (sig) {
+      const lum = (r + gg + b) / 765, k = sig * (1.15 - 0.5 * lum);
+      const n = (rnd() + rnd() + rnd() - 1.5) * 2 * k;
+      r += n + (rnd() - 0.5) * k; gg += n; b += n + (rnd() - 0.5) * k * 1.3;
+    }
+    d[j] = r; d[j + 1] = gg; d[j + 2] = b;
+  }
+  g.putImageData(im, 0, 0);
+}
+async function shoot() {
+  if (!CAM.ready || !V.vw || SHOOT.busy) return;
+  SHOOT.busy = true;
+  try {
+    const P = proEff();
+    if (!S.steady && P.frames < 2) {
+      SHOOT.msg = 'Hold still';
+      const t0 = performance.now();
+      while (!S.steady && performance.now() - t0 < 700) await nextFrame();
+    }
+    const c = currentCrop(), ref = S.hasOri ? S.ref : 0, dev = S.hasOri && S.usable ? S.dev : 0, info = AN.info || {};
+    const bl = el('blink'); bl.classList.remove('on'); void bl.offsetWidth; bl.classList.add('on');
+    let cv;
+    if (P.frames > 1) { SHOOT.prog = 0; cv = await longExposure(c, P.frames); }
+    else cv = await sharpestOf(c, 4);
+    SHOOT.msg = 'Developing'; SHOOT.prog = null;
+    await new Promise(r => setTimeout(r, 0));
+    cv = rotateUpright(cv, ref);
+    if (!CAM.real) develop(cv, P.gain, P.iso);
+    else if (PRO.ev && !CAM.caps.exposureCompensation) develop(cv, PRO.ev, 100);
+    const shot = {
+      cv, w: cv.width, h: cv.height, zoom: V.z, digital: V.z / CAM.base, ultra: CAM.ultra, date: new Date(), ev: 0,
+      straight: Math.abs(dev) > 0.3 && Math.abs(dev) < 8 ? -dev : 0,
+      warm: !!info.golden, sun: !!info.sunIn, low: !!info.low, blue: !!info.blue,
+      manual: P.manual, iso: P.iso, sh: P.sh, long: P.frames > 1
+    };
+    shot.small = downscale(cv, 256);
+    shot.auto = computeAuto(shot);
+    shots.push(shot); if (shots.length > 10) shots.shift();
+    const tc = el('thumbC'), tg = tc.getContext('2d'), m = Math.min(shot.small.width, shot.small.height);
+    tg.drawImage(shot.small, (shot.small.width - m) / 2, (shot.small.height - m) / 2, m, m, 0, 0, tc.width, tc.height);
+    if (!SG.manual) { clearSugg(); SG.snooze = performance.now() + 1200; }
+    if (CFG.review) openEditor(shot);
+  } catch (e) { toast('Couldn’t take the photo'); }
+  finally { SHOOT.busy = false; SHOOT.msg = ''; SHOOT.prog = null; }
 }
 
 /* ---------------- auto edit ---------------- */
 function computeAuto(shot) {
   const c = shot.small, d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data, N = c.width * c.height;
   const hist = new Uint32Array(256);
-  let wr = 0, wg = 0, wb = 0, wn = 0, warm = 0, dark = 0, clip = 0, blue = 0;
+  let wr = 0, wg = 0, wb = 0, wn = 0, warm = 0, dark = 0, clip = 0, blue = 0, rgS = 0, rgS2 = 0, ybS = 0, ybS2 = 0;
   for (let j = 0; j < d.length; j += 4) {
     const r = d[j], g = d[j + 1], b = d[j + 2], l = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    const rg = r - g, yb = 0.5 * (r + g) - b; rgS += rg; rgS2 += rg * rg; ybS += yb; ybS2 += yb * yb;
     hist[l | 0]++; if (l < 30) dark++; if (l >= 250) clip++;
     const mx = Math.max(r, g, b), mn = Math.min(r, g, b), s = mx ? (mx - mn) / mx : 0;
     if (r > b * 1.3 && r >= g && s > 0.28 && l > 50) warm++;
@@ -1229,7 +1542,8 @@ function computeAuto(shot) {
   if (warmScene) sug = (shot.sun || m < 0.3) ? 'ember' : 'golden';
   else if (shot.low || med < 0.18) sug = 'dusk';
   else if (shot.blue || blue / N > 0.3) sug = 'tide';
-  return { exp, lv: [bp, wp], hi: hiA, sh: shA, con: 0.12, vib: warmScene ? 0.28 : 0.2, clar: 0.14, sharp: clamp(0.22 + (shot.digital - 1) * 0.06, 0.22, 0.55), wb: wbv, sug };
+  const mrg = rgS / N, myb = ybS / N, colorful = Math.hypot(Math.sqrt(Math.max(0, rgS2 / N - mrg * mrg)), Math.sqrt(Math.max(0, ybS2 / N - myb * myb))) + 0.3 * Math.hypot(mrg, myb);
+  return { exp, lv: [bp, wp], hi: hiA, sh: shA, con: 0.12, vib: warmScene ? 0.28 : 0.2, clar: 0.14, sharp: clamp(0.22 + (shot.digital - 1) * 0.06, 0.22, 0.55) * (shot.long ? 0.6 : 1), wb: wbv, sug, warmScene, colorful };
 }
 const NEUTRAL = { exp: 0, lv: [0, 1], hi: 0, sh: 0, con: 0, vib: 0, clar: 0, sharp: 0, wb: [1, 1, 1] };
 
@@ -1345,6 +1659,7 @@ const GL = {
     return { t, w: src.width, h: src.height };
   },
   drop(x) { if (x && this.gl) this.gl.deleteTexture(x.t); },
+  read(w, h) { const gl = this.gl, b = new Uint8Array(w * h * 4); gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, b); return b; },
   render(w, h, src, blur, P, sharpScale) {
     const gl = this.gl, u = n => this.loc(n);
     w = Math.max(1, Math.round(w)); h = Math.max(1, Math.round(h));
@@ -1387,7 +1702,8 @@ function caption(shot) {
   const t = shot.date;
   const time = t.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
   const day = t.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
-  return { model, brand, specs: [mm + 'mm', shot.ultra ? 'f/2.2' : 'f/1.8', time, day].join('    ') };
+  const f = shot.ultra ? 'f/2.2' : 'f/1.8';
+  return { model, brand, specs: (shot.manual ? [mm + 'mm', f, fmtSh(shot.sh), 'ISO' + shot.iso] : [mm + 'mm', f, time, day]).join('    ') };
 }
 const FAM = 'system-ui,-apple-system,"Helvetica Neue",Helvetica,Arial,sans-serif';
 function drawCard(g, L, photo, style, cap, s) {
@@ -1435,7 +1751,7 @@ function openEditor(shot) {
   try { if (!GL.init()) { toast('Editing needs WebGL, which is off here'); return; } }
   catch (e) { toast('The editor couldn’t start'); return; }
   E.shot = shot;
-  E.look = shot.auto.sug; E.amt = 0.6; E.adj = Object.assign({}, ZERO_ADJ); E.straight = shot.straight; E.auto = true; E.orig = false;
+  E.look = 'natural'; E.amt = 0.7; E.adj = Object.assign({}, ZERO_ADJ); E.straight = 0; E.auto = false; E.pre = null; E.orig = false;
   E.blob = null; E.blobKey = '';
   if (E.tex) { GL.drop(E.tex.full); GL.drop(E.tex.prev); GL.drop(E.tex.thumb); GL.drop(E.tex.blur); }
   let full = shot.cv;
@@ -1443,9 +1759,11 @@ function openEditor(shot) {
   E.tex = { full: GL.tex(full), prev: GL.tex(downscale(shot.cv, 1600)), thumb: GL.tex(shot.small), blur: GL.tex(downscale(shot.cv, 72)) };
   EDITOR_OPEN = true; el('editor').hidden = false;
   el('modelIn').value = CFG.model;
-  el('eAuto').classList.toggle('on', E.auto);
-  el('amt').value = Math.round(E.amt * 100); el('amtV').textContent = Math.round(E.amt * 100);
-  buildLooks(); buildAdjs(); syncFrames(); setTab('looks');
+  pickLook(shot);
+  buildAdjs();
+  if (CFG.autoEdit) setAuto(true, true);
+  syncAutoUI();
+  buildLooks(); syncFrames(); setTab('looks');
   requestAnimationFrame(() => { renderPreview(); });
 }
 function closeEditor() { EDITOR_OPEN = false; el('editor').hidden = true; lastT = 0; }
@@ -1480,7 +1798,7 @@ function buildLooks() {
   const shot = E.shot, tw = 132, sm = shot.small;
   for (const lk of LOOKS) {
     const b = document.createElement('button');
-    b.className = 'look' + (lk.id === E.look ? ' on' : '') + (lk.id === shot.auto.sug ? ' sug' : '');
+    b.className = 'look' + (lk.id === E.look ? ' on' : '') + (shot.pick && lk.id === shot.pick.look ? ' sug' : '');
     b.dataset.id = lk.id;
     const c = mk(tw, tw), g = c.getContext('2d');
     const P = makeParams(shot, { look: lk.id, amt: 1, adj: ZERO_ADJ, straight: 0, auto: E.auto, orig: false });
@@ -1536,10 +1854,60 @@ for (const b of document.querySelectorAll('.etabs button')) b.addEventListener('
 function syncFrames() { for (const b of el('frames').children) b.classList.toggle('on', b.dataset.f === E.frame); }
 for (const b of el('frames').children) b.addEventListener('click', () => { E.frame = b.dataset.f; store.set('frame', E.frame); syncFrames(); queueRender(); });
 el('modelIn').addEventListener('input', e => { CFG.model = e.target.value; store.set('model', CFG.model); queueRender(); });
-el('eAuto').addEventListener('click', () => {
-  E.auto = !E.auto; el('eAuto').classList.toggle('on', E.auto);
-  buildLooks(); queueRender();
-});
+el('eAuto').addEventListener('click', () => setAuto(!E.auto));
+// One tap: exposure, white balance, highlights/shadows, straighten, and the best-scoring look.
+// Tap again: back exactly to what you had before (your own slider tweaks stay).
+function setAuto(on, silent) {
+  if (on === E.auto) return;
+  if (on) {
+    E.pre = { look: E.look, amt: E.amt, straight: E.straight };
+    const pk = pickLook(E.shot);
+    E.look = pk.look; E.amt = pk.amt; E.straight = E.shot.straight; E.auto = true;
+  } else {
+    const p = E.pre || { look: 'natural', amt: 0.7, straight: 0 };
+    E.look = p.look; E.amt = p.amt; E.straight = p.straight; E.auto = false;
+  }
+  if (silent) return;
+  syncAutoUI(); buildLooks(); syncAdj(); queueRender();
+  toast(E.auto ? 'Auto edit on' : 'Back to your original');
+}
+function syncAutoUI() {
+  const b = el('eAuto'); b.classList.toggle('on', E.auto); b.lastChild.textContent = E.auto ? 'Auto on' : 'Auto';
+  el('amt').value = Math.round(E.amt * 100); el('amtV').textContent = Math.round(E.amt * 100);
+}
+function imgMetrics(b, n) {
+  const hist = new Uint32Array(32); let sum = 0, sum2 = 0, hi = 0, lo = 0, rgS = 0, rgS2 = 0, ybS = 0, ybS2 = 0;
+  for (let j = 0; j < b.length; j += 4) {
+    const r = b[j], g = b[j + 1], bl = b[j + 2], l = 0.2126 * r + 0.7152 * g + 0.0722 * bl;
+    hist[l >> 3]++; sum += l; sum2 += l * l; if (l > 250) hi++; if (l < 5) lo++;
+    const rg = r - g, yb = 0.5 * (r + g) - bl; rgS += rg; rgS2 += rg * rg; ybS += yb; ybS2 += yb * yb;
+  }
+  const mean = sum / n, sd = Math.sqrt(Math.max(0, sum2 / n - mean * mean));
+  let ent = 0; for (const c of hist) if (c) { const p = c / n; ent -= p * Math.log2(p); }
+  const mrg = rgS / n, myb = ybS / n;
+  const col = Math.hypot(Math.sqrt(Math.max(0, rgS2 / n - mrg * mrg)), Math.sqrt(Math.max(0, ybS2 / n - myb * myb))) + 0.3 * Math.hypot(mrg, myb);
+  return { mean, sd, ent, hi: hi / n, lo: lo / n, col };
+}
+// Actually renders every look at two strengths and grades the results (tonal range,
+// contrast, clipping, brightness, colour), with a nudge from what the scene is.
+function pickLook(shot) {
+  if (shot.pick) return shot.pick;
+  const sm = shot.small, w = sm.width, h = sm.height, a = shot.auto, target = a.warmScene ? 100 : 118;
+  let best = { look: a.sug, amt: 0.6, s: -1e9 };
+  for (const lk of LOOKS) for (const amt of [0.55, 0.85]) {
+    if (lk.id === 'natural' && amt > 0.6) continue;
+    const P = makeParams(shot, { look: lk.id, amt, adj: ZERO_ADJ, straight: 0, auto: true, orig: false });
+    GL.render(w, h, E.tex.thumb, E.tex.blur, P, 0);
+    const m = imgMetrics(GL.read(w, h), w * h);
+    let s = m.ent / 5 * 0.8 + Math.min(m.sd, 70) / 70 * 0.5 - m.hi * 4 - m.lo * 2.5 - Math.abs(m.mean - target) / 140 + Math.min(m.col, 60) / 60 * 0.35;
+    if (lk.p.mono) s += a.colorful < 18 ? 0.3 : -0.2;
+    if (lk.id === a.sug) s += 0.12;
+    if (lk.id === 'natural') s += 0.04;
+    if (amt > 0.6) s -= 0.05;
+    if (s > best.s) best = { look: lk.id, amt, s };
+  }
+  return (shot.pick = best);
+}
 el('eClose').addEventListener('click', closeEditor);
 
 // press and hold to compare
